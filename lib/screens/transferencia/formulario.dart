@@ -1,4 +1,5 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/database/transferenciaDao.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class FormularioTransferencia extends StatefulWidget {
 class FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controladorConta = TextEditingController();
   final TextEditingController _controladorValor = TextEditingController();
+  final TransferenciaDao _dao = TransferenciaDao();
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +58,8 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     final int _conta = int.tryParse(_controladorConta.text);
 
     if (_conta != null && _valor != null) {
-      final _transferenciaCriada = Transferencia(_valor, _conta);
-      Navigator.pop(context, _transferenciaCriada);
+      final _transferenciaCriada = Transferencia(0, _conta, _valor);
+      _dao.save(_transferenciaCriada).then((value) => Navigator.pop(context));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
